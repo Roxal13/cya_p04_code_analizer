@@ -28,14 +28,17 @@ using namespace std;
 // La clase Bucle
 class Bucle
 {
+private:
   string tipo; // "for" o "while"
   int linea;   // Línea donde se encuentra el bucle
-private:
   
 
 public:
   // Constructor que crea el bucle
   Bucle(string tipo, int linea);  
+
+  // Devolver la salida del bucle
+  string salidaBucle();
 };
 
 #endif

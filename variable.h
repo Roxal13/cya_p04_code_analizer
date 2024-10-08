@@ -29,14 +29,17 @@ using namespace std;
 class Variable
 {
 private:
-  string tipo;        // "int" o "double"
-  string nombre;      // Nombre de la variable
-  int linea;          // Línea donde se declara
-  bool inicializada;  // Boolean que comprueba si se inicializó
+  string tipo;          // "int" o "double"
+  string nombre;        // Nombre de la variable
+  int linea;            // Línea donde se declara
+  string valor;  // Valor de lav ariable
 
 public:
   // Constructor que crea la variable
-  Variable(string tipo, string nombre, int linea, bool inicializada);
+  Variable(string tipo, string nombre, int linea, string valor);
+
+  // Devolver la salida de la variable
+  string salidaVariable();
 };
 
 #endif

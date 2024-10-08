@@ -16,3 +16,36 @@
 // 07/10/2024 - Creación (primera versión) del código
 
 #include "comentario.h"
+
+// Constructor que crea el comentario de una línea
+  Comentario::Comentario(string contenido, int inicio)
+  {
+    this->contenido = contenido;
+    this->inicio = inicio;
+  }
+
+  // Constructor que crea el comentario multi-línea
+  Comentario::Comentario(string contenido, int inicio, int fin)
+  {
+    this->contenido = contenido;
+    this->inicio = inicio;
+    this->fin = fin;
+  }
+
+  // Devolver la salida de la descripción
+  string Comentario::salidaDescripcion()
+  {
+    return "DESCRIPTION:\n" + this->contenido;
+  }
+
+  // Devolver la salida del comentario
+  string Comentario::salidaComentario()
+  {
+    return "[Line " + to_string(this->inicio) + (this->inicio == 1 ? "-" + to_string(this->fin) + "] DESCRIPTION" : "] " + this->contenido);
+  }
+
+  // Se obtiene el inicio
+  int Comentario::getInicio()
+  {
+    return this->inicio;
+  }

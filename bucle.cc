@@ -16,3 +16,16 @@
 // 07/10/2024 - Creación (primera versión) del código
 
 #include "bucle.h"
+
+// Contructor de bucle
+Bucle::Bucle(string tipo, int linea)
+{
+	this->tipo = tipo;
+	this->linea = linea;
+}
+
+// Devuelve el formato a escribir en el archivo de salida
+string Bucle::salidaBucle()
+{
+	return "[Line " + to_string(this->linea) + "] LOOP: " + this->tipo;
+}

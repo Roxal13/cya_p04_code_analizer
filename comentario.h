@@ -28,16 +28,26 @@ using namespace std;
 // La clase comentario
 class Comentario
 {
-  
 private:
-  
+  string contenido;
+  int inicio;
+  int fin;
 
 public:
-  // Constructor que crea el comentario
-  Comentario();
+  // Constructor que crea el comentario de una línea
+  Comentario(string contenido, int inicio);
 
+  // Constructor que crea el comentario multi-línea
+  Comentario(string contenido, int inicio, int fin);
 
-  
+  // Devolver la salida de la descripción
+  string salidaDescripcion();
+
+  // Devolver la salida del comentario
+  string salidaComentario();
+
+  // Se obtiene el inicio
+  int getInicio();
 };
 
 #endif
