@@ -19,14 +19,31 @@
 
 #include "analizador_codigo.h"
 
+// Obtiene la posición del elemento en el archivo
 int AnalizadorCodigo::posicionLinea(string contenido, int posicion)
 {
   return count(contenido.begin(), contenido.begin() + posicion, '\n') + 1;
 }
 
+// Cuenta las líneas que ocupa el elemento
 int AnalizadorCodigo::contarLineas(string texto)
 {
   return count(texto.begin(), texto.end(), '\n') + 1;
+}
+
+// Comprobar que la variable, bucle o main no se encuentre en un comentario
+bool AnalizadorCodigo::comprobarLinea(int linea)
+{
+  for (Comentario &comentario : this->comentarios)
+  {
+    if (linea >= comentario.getInicio() && linea <= comentario.getFin())
+    {
+      // La línea está dentro de un comentario
+      return true;
+    }
+  }
+  // La línea no está dentro de ningún comentario
+  return false;
 }
 
 void AnalizadorCodigo::analizar(string contenido)
@@ -52,7 +69,7 @@ void AnalizadorCodigo::analizar(string contenido)
       // Donde empieza el comentario
       comm_inicio = posicionLinea(contenido, comm.position());
       // Donde acaba el comentario
-      comm_fin = contarLineas(comm_contenido);
+      comm_fin = comm_inicio + contarLineas(comm_contenido) - 1;
 
       Comentario comentario(comm_contenido, comm_inicio, comm_fin);
       comentarios.push_back(comentario);
@@ -62,10 +79,11 @@ void AnalizadorCodigo::analizar(string contenido)
     {
       // El contenido del comentario
       comm_contenido = comm.str(2);
-      // Donde empieza el comentario
+      // Donde empieza y acaba el comentario
       comm_inicio = posicionLinea(contenido, comm.position());
+      comm_fin = comm_inicio;
 
-      Comentario comentario(comm_contenido, comm_inicio);
+      Comentario comentario(comm_contenido, comm_inicio, comm_fin);
       comentarios.push_back(comentario);
     }
 
@@ -82,17 +100,23 @@ void AnalizadorCodigo::analizar(string contenido)
   {
     smatch var = *currentVar;
 
-    // El tipo de variable es el primer grupo capturado
-    string var_tipo = var.str(1);
-    // El nombre de la variable es el segundo grupo capturado
-    string var_nombre = var.str(2);
-    // El valor de la variable (si existe) es el cuarto grupo capturado
-    string var_valor = var.str(4).empty() ? "N/A" : var.str(4);
     // Obtenemos el número de línea
     int var_linea = posicionLinea(contenido, var.position());
-    // Se crea una variable
-    Variable variable(var_tipo, var_nombre, var_linea, var_valor);
-    variables.push_back(variable);
+
+    // Comprobar si la variable está dentro de un comentario
+    if (!comprobarLinea(var_linea))
+    {
+      // El tipo de variable es el primer grupo capturado
+      string var_tipo = var.str(1);
+      // El nombre de la variable es el segundo grupo capturado
+      string var_nombre = var.str(2);
+      // El valor de la variable (si existe) es el cuarto grupo capturado
+      string var_valor = var.str(4).empty() ? "N/A" : var.str(4);
+
+      // Se crea una variable
+      Variable variable(var_tipo, var_nombre, var_linea, var_valor);
+      variables.push_back(variable);
+    }
 
     ++currentVar; // Seguimos iterando
   }
@@ -107,34 +131,48 @@ void AnalizadorCodigo::analizar(string contenido)
   {
     smatch buc = *currentBucle;
 
-    // El tipo de bucle es el primer grupo capturado
-    string bucle_tipo = buc.str(1);
     // Obtenemos el número de línea
     int bucle_linea = posicionLinea(contenido, buc.position());
-    // Se crea una variable
-    Bucle bucle(bucle_tipo, bucle_linea);
-    bucles.push_back(bucle);
+
+    // Comprobar si el bucle está dentro de un comentario
+    if (!comprobarLinea(bucle_linea))
+    {
+      // El tipo de bucle es el primer grupo capturado
+      string bucle_tipo = buc.str(1);
+
+      // Se crea un bucle
+      Bucle bucle(bucle_tipo, bucle_linea);
+      bucles.push_back(bucle);
+    }
 
     ++currentBucle; // Seguimos iterando
   }
 
-    // Buscamos función principal
-    regex regexMain(R"(\w+\s+main\(\)\s*\{[\d\D]*\})");
-    sregex_iterator currentMain(contenido.begin(), contenido.end(), regexMain);
-    sregex_iterator lastMain;
+  // Buscamos función principal
+  regex regexMain(R"(\w+\s+main\(\)\s*\{[\d\D]*\})");
+  sregex_iterator currentMain(contenido.begin(), contenido.end(), regexMain);
+  sregex_iterator lastMain;
 
-    // Mientras no sea el último main 
-    while (currentMain != lastMain && this->existeMain == false)
+  // Mientras no sea el último main
+  while (currentMain != lastMain && this->existeMain == false)
+  {
+    smatch mainMatch = *currentMain;
+    int main_linea = posicionLinea(contenido, mainMatch.position());
+
+    // Comprobar si la función main está dentro de un comentario
+    if (!comprobarLinea(main_linea))
     {
       // Si entra en el bucle, será porque hay un main
       this->existeMain = true;
-      ++currentMain;
     }
+
+    ++currentMain;
+  }
 }
 
 // Metodo que imprime el resultado en el fichero como argumento
-void AnalizadorCodigo::resultadoAnalisis(ofstream& outfile)
-{  
+void AnalizadorCodigo::resultadoAnalisis(ofstream &outfile)
+{
   // Comprobamos que haya comentarios y si hay alguno inicial
   if (!this->comentarios.empty() && this->comentarios[0].getInicio() == 1)
   {
@@ -165,9 +203,11 @@ void AnalizadorCodigo::resultadoAnalisis(ofstream& outfile)
   }
 
   // Imprimimos si hay función principal o no
-  cout << "\nMAIN:\n" << (this->existeMain == false ? "False" : "True") << endl;
-  outfile << "\nMAIN:\n" << (this->existeMain == false ? "False" : "True") << endl;
-  
+  cout << "\nMAIN:\n"
+       << (this->existeMain == false ? "False" : "True") << endl;
+  outfile << "\nMAIN:\n"
+          << (this->existeMain == false ? "False" : "True") << endl;
+
   // Imprimimos los comentarios
   cout << "\nCOMMENTS:\n";
   outfile << "\nCOMMENTS:\n";

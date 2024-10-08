@@ -48,6 +48,9 @@ public:
 
   // Se obtiene el inicio
   int getInicio();
+
+  // Se obtiene el final
+  int getFin();
 };
 
 #endif

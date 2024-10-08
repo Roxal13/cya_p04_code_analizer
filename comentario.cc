@@ -44,8 +44,14 @@
     return "[Line " + to_string(this->inicio) + (this->inicio == 1 ? "-" + to_string(this->fin) + "] DESCRIPTION" : "] " + this->contenido);
   }
 
-  // Se obtiene el inicio
+  // Se obtiene la línea inicial
   int Comentario::getInicio()
   {
     return this->inicio;
+  }
+
+    // Se obtiene la línea final
+  int Comentario::getFin()
+  {
+    return this->fin;
   }

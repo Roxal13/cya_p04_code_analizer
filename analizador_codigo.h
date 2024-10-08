@@ -34,7 +34,6 @@ private:
   vector<Comentario> comentarios;
   bool existeMain;
 
-
 public:
   // Obtener posición de la línea
   int posicionLinea(string contenido, int posicion);
@@ -42,11 +41,14 @@ public:
   // Contar lineas
   int contarLineas(string texto);
 
+  // Comprobar que la variable, bucle o main no se encuentre en un comentario
+  bool comprobarLinea(int linea);
+
   // Función que analiza el texto del fichero
   void analizar(const string contenido);
 
   // Función que imprime el archivo de vuelta
-  void resultadoAnalisis(ofstream& outfile);
+  void resultadoAnalisis(ofstream &outfile);
 };
 
 #endif

@@ -6,6 +6,10 @@
  @brief Ejercicios de programacion
  Version 1: Funcion factorial
 
+ int ejemplo = 1;
+
+ for (int i = 0; i < 10; i++) {}
+
  @see https :// github .com/IB -2023 -2024/ IB -class -code - examples /
  */
 

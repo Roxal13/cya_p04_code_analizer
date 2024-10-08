@@ -8,21 +8,25 @@ DESCRIPTION:
  @brief Ejercicios de programacion
  Version 1: Funcion factorial
 
+ int ejemplo = 1;
+
+ for (int i = 0; i < 10; i++) {}
+
  @see https :// github .com/IB -2023 -2024/ IB -class -code - examples /
  */
 
 VARIABLES:
-[Line 23] INT: factorial = 1
-[Line 24] DOUBLE: ejemplo = 21.12
-[Line 36] INT: limit
+[Line 27] INT: factorial = 1
+[Line 28] DOUBLE: ejemplo = 21.12
+[Line 40] INT: limit
 
 STATEMENTS:
-[Line 26] LOOP: for
-[Line 39] LOOP: for
+[Line 30] LOOP: for
+[Line 43] LOOP: for
 
 MAIN:
 True
 
 COMMENTS:
-[Line 1-10] DESCRIPTION
-[Line 15] // Returns the factorial of the argument
+[Line 1-14] DESCRIPTION
+[Line 19] // Returns the factorial of the argument
