@@ -7,7 +7,7 @@
 // Autor: Álvaro Romeo Franco
 // Correo: alu0101679716@ull.edu.es
 // Fecha: 07/10/2024
-// Archivo variable.h: definición de variable.
+// Archivo analizador_codigo.cc: definición de variable.
 //
 // Referencias:
 // 		Enlaces de interés
@@ -15,6 +15,7 @@
 //
 // Historial de revisiones
 // 07/10/2024 - Creación (primera versión) del código
+// 08/10/2024 - Finalización lógica de análisis y escritura del archivo.
 
 #include "analizador_codigo.h"
 
